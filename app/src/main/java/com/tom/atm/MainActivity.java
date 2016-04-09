@@ -7,26 +7,37 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     boolean logon = false;
     public static final int FUNC_LOGIN = 1;
     String[] func = {"餘額查詢", "交易明細", "最新消息", "投資理財", "離開"};
+    int[] icons = {R.drawable.func_balance,
+            R.drawable.func_history,
+            R.drawable.func_news,
+            R.drawable.func_finance,
+            R.drawable.func_exit};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //grid
         GridView grid = (GridView)findViewById(R.id.grid);
-        ArrayAdapter gAdapter =
-                new ArrayAdapter(this, android.R.layout.simple_list_item_1, func);
+        IconAdapter gAdapter = new IconAdapter();
         grid.setAdapter(gAdapter);
+//        ArrayAdapter gAdapter =
+//                new ArrayAdapter(this, android.R.layout.simple_list_item_1, func);
+//        grid.setAdapter(gAdapter);
         grid.setOnItemClickListener(this);
         // spinner
         Spinner notify = (Spinner)findViewById(R.id.notify_spinner);
@@ -106,6 +117,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case 4:
                 finish();
                 break;
+        }
+    }
+
+    class IconAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return func.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return func[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return icons[position];
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View row = convertView;
+            if (row == null){
+                row = getLayoutInflater().inflate(R.layout.item_row, null);
+                ImageView image = (ImageView) row.findViewById(R.id.item_image);
+                TextView text = (TextView) row.findViewById(R.id.item_text);
+                image.setImageResource(icons[position]);
+                text.setText(func[position]);
+            }
+            return row;
         }
     }
 }
