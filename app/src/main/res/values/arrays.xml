@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="notify_array">
+        <item>永不</item>
+        <item>只有震動</item>
+        <item>只有提示音</item>
+        <item>震動與提示音</item>
+    </array>
+</resources>
