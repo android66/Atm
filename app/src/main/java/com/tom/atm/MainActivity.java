@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case 2:
                 break;
             case 3:
+                startActivity(new Intent(this, FinanceActivity.class));
                 break;
             case 4:
                 finish();
