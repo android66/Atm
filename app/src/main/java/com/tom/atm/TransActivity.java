@@ -5,11 +5,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -30,8 +38,11 @@ public class TransActivity extends AppCompatActivity {
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.d("OKHTTP", response.body().string());
+                String json = response.body().string();
+                Log.d("OKHTTP", json);
                 //解析JSON
+                parseGson(json);
+//                parseJSON(json);
             }
             @Override
             public void onFailure(Call call, IOException e) {
@@ -74,6 +85,28 @@ public class TransActivity extends AppCompatActivity {
     }
 
     private void parseJSON(String s) {
-
+        ArrayList<Transaction> trans = new ArrayList<>();
+        try {
+            JSONArray array = new JSONArray(s);
+            for (int i=0; i<array.length(); i++){
+                JSONObject obj = array.getJSONObject(i);
+                String account = obj.getString("account");
+                String date = obj.getString("date");
+                int amount = obj.getInt("amount");
+                int type = obj.getInt("type");
+                Log.d("JSON:",account+"/"+date+"/"+amount+"/"+type);
+                Transaction t = new Transaction(account, date, amount, type);
+                trans.add(t);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void parseGson(String s){
+        Gson gson = new Gson();
+        ArrayList<Transaction> list =
+            gson.fromJson(s,
+                new TypeToken<ArrayList<Transaction>>(){}.getType());
+        Log.d("JSON",list.size()+"/"+list.get(0).getAmount());
     }
 }
