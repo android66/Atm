@@ -31,7 +31,8 @@ public class LoginActivity extends AppCompatActivity {
         EditText edPasswd = (EditText) findViewById(R.id.passwd);
         String uid = edUserid.getText().toString();
         String pw = edPasswd.getText().toString();
-        String url = new StringBuilder("http://atm.snpy.org/login?uid=")
+        String url = new StringBuilder(
+                "http://atm201605.appspot.com/login?uid=")
                 .append(uid)
                 .append("&pw=")
                 .append(pw)
