@@ -3,11 +3,17 @@ package com.tom.atm;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.ListView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.JavaType;
+import org.codehaus.jackson.type.TypeReference;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +24,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -41,8 +48,9 @@ public class TransActivity extends AppCompatActivity {
                 String json = response.body().string();
                 Log.d("OKHTTP", json);
                 //解析JSON
-                parseGson(json);
-//                parseJSON(json);
+                //                parseJSON(json);
+                //                parseGson(json);
+                parseJackson(json);
             }
             @Override
             public void onFailure(Call call, IOException e) {
@@ -108,5 +116,31 @@ public class TransActivity extends AppCompatActivity {
             gson.fromJson(s,
                 new TypeToken<ArrayList<Transaction>>(){}.getType());
         Log.d("JSON",list.size()+"/"+list.get(0).getAmount());
+    }
+
+    private void parseJackson(String s){
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            final ArrayList<Transaction> list =
+                    objectMapper.readValue(s,
+                            new TypeReference<List<Transaction>>(){});
+            Log.d("JSON",list.size()+"/"+list.get(0).getAmount());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setupRecyclerView(list);
+                }
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void setupRecyclerView(List<Transaction> list){
+        RecyclerView recyclerView =
+                (RecyclerView) findViewById(R.id.recycler);
+        TransactionAdapter adapter = new TransactionAdapter(list);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }
