@@ -39,7 +39,14 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ed_info" />
+        android:id="@+id/ed_info"
+        android:visibility="gone" />
+
+    <AutoCompleteTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/autoCompleteTextView"
+        android:completionThreshold="1" />
 
     <TextView
         android:layout_width="wrap_content"
