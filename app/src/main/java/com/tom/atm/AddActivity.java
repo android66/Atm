@@ -1,6 +1,7 @@
 package com.tom.atm;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 
 public class AddActivity extends AppCompatActivity {
 
@@ -24,16 +26,23 @@ public class AddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
         findViews();
-        setupAdapter();
         helper = MyDBHelper.getInstance(this);
+        setupAdapter();
     }
 
     private void setupAdapter() {
-        String[] infos = {"Breakfast", "Bread", "Lunch", "Parking", "Bill"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+        /*ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,
-                infos);
+                infos);*/
+        Cursor cursor = helper.getReadableDatabase()
+                .query("infos", null, null, null, null, null, null);
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                this,
+                android.R.layout.simple_list_item_1,
+                cursor,
+                new String[]{"info"},
+                new int[]{android.R.id.text1}, 0);
         autoInfo.setAdapter(adapter);
         autoInfo.setOnClickListener(new View.OnClickListener() {
             @Override
